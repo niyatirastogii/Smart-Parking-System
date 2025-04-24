@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_PARKING_SLOTS 5 // Max parking slots
+int parkingStack[MAX_PARKING_SLOTS];
+int top = -1; // Initially the stack is empty
+char* waitingQueue[MAX_PARKING_SLOTS];
+int front = -1, rear = -1;
+void initializeParkingSlots() {
+ for (int i = 0; i < MAX_PARKING_SLOTS; i++) {
+ parkingStack[++top] = i + 1; // Parking slots are numbered from 1
+ }
+}
+void parkCar(char* carNumber) {
+ if (top == -1) {
+ printf("Parking is full. Car %s is waiting.\n", carNumber);
+ if (rear == MAX_PARKING_SLOTS - 1) {
+ printf("Queue is full.\n");
+ } else {
+{
+    if (front == -1) front = 0;
+ waitingQueue[++rear] = carNumber;
+ }
+} else {
+ int slot = parkingStack[top--];
+ printf("Car %s parked at slot %d.\n", carNumber, slot);
+ }
+}
+void removeCar(char* carNumber) {
+ if (top < MAX_PARKING_SLOTS - 1) {
+ parkingStack[++top] = MAX_PARKING_SLOTS - top; // Simulate 
+slot being freed
+ printf("Car %s removed from parking.\n", carNumber);
+ if (front != -1) {
+ char* waitingCar = waitingQueue[front++];
+ printf("Car %s is now parked.\n", waitingCar);
+ if (front > rear) front = rear = -1; 
+ }
+ } else {
+ printf("No cars to remove.\n");
+ }
+}
+void displayParkingStatus() {
+ printf("\nAvailable parking slots (Stack): ");
+if (top == -1) {
+ printf("No slots available.\n");
+ } else {
+ for (int i = top; i >= 0; i--) {
+ printf("%d ", parkingStack[i]);
+ }
+ printf("\n");
+ }
+ printf("Waiting cars (Queue): ");
+ if (front == -1) {
+ printf("No cars waiting.\n");
+ } else {
+ for (int i = front; i <= rear; i++) {
+    printf("%s ", waitingQueue[i]);
+ }
+ printf("\n");
+ }
+}
+int main() {
+ int choice;
+ char* carNumber = (char*)malloc(20 * sizeof(char)); // Dynamic 
+memory for car number
+ initializeParkingSlots(); 
+ while (1) {
+ printf("\nSmart Parking System\n");
+ printf("1. Park a Car\n");
+ printf("2. Remove a Car\n");
+ printf("3. Display Parking Status\n");
+ printf("4. Exit\n");
+ printf("Enter your choice: ");
+ scanf("%d", &choice);
+ switch (choice) {
+ case 1:
+ printf("Enter car number to park: ");
+ scanf("%s", carNumber);
+ parkCar(carNumber);
+ break;
+ case 2:
+ printf("Enter car number to remove: ");
+ scanf("%s", carNumber);
+ removeCar(carNumber);
+ break;
+ case 3:
+ displayParkingStatus();
+ break;
+case 4:
+ free(carNumber); 
+ exit(0);
+ default:
+ printf("Invalid choice. Please try again.\n");
+ }
+ }
+ return 0;
+}
+
